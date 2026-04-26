@@ -169,7 +169,7 @@ public class ListaContactos {
 	/**
 	 * Métodos para comprobar que insertamos de manera correcta en las listas de 
 	 * coordenadas, no tienen una utilidad en sí misma, más allá de comprobar que
-	 * nuestra lista funciona de manera correcta.
+	 * nuestra lista funciona de manera correcta
 	 */
 
 	
