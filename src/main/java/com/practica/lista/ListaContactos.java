@@ -139,56 +139,39 @@ public class ListaContactos {
 		return cadena;
 	}
 
+	// --- MÉTODO NUEVO EXTRAÍDO ---
+	private int contarEnRango(FechaHora inicio, FechaHora fin, boolean contarPersonas) {
+		if (this.size == 0) return 0;
+		NodoTemporal aux = lista;
+		int cont = 0;
+		while (aux != null) {
+			if (aux.getFecha().compareTo(inicio) >= 0 && aux.getFecha().compareTo(fin) <= 0) {
+				NodoPosicion nodo = aux.getListaCoordenadas();
+				while (nodo != null) {
+					cont += contarPersonas ? nodo.getNumPersonas() : 1;
+					nodo = nodo.getSiguiente();
+				}
+			}
+			aux = aux.getSiguiente();
+		}
+		return cont;
+	}
+
+	// --- MÉTODOS REFACTORIZADOS ---
+	public int numPersonasEntreDosInstantes(FechaHora inicio, FechaHora fin) {
+		return contarEnRango(inicio, fin, true);
+	}
+
+	public int numNodosCoordenadaEntreDosInstantes(FechaHora inicio, FechaHora fin) {
+		return contarEnRango(inicio, fin, false);
+	}
+
 	/**
 	 * Métodos para comprobar que insertamos de manera correcta en las listas de 
 	 * coordenadas, no tienen una utilidad en sí misma, más allá de comprobar que
 	 * nuestra lista funciona de manera correcta.
 	 */
-	public int numPersonasEntreDosInstantes(FechaHora inicio, FechaHora fin) {
-		if(this.size==0)
-			return 0;
-		NodoTemporal aux = lista;
-		int cont = 0;
-		int a;
-		cont = 0;
-		while(aux!=null) {
-			if(aux.getFecha().compareTo(inicio)>=0 && aux.getFecha().compareTo(fin)<=0) {
-				NodoPosicion nodo = aux.getListaCoordenadas();
-				while(nodo!=null) {
-					cont = cont + nodo.getNumPersonas();
-					nodo = nodo.getSiguiente();
-				}				
-				aux = aux.getSiguiente();
-			}else {
-				aux=aux.getSiguiente();
-			}
-		}
-		return cont;
-	}
-	
-	
-	
-	public int numNodosCoordenadaEntreDosInstantes(FechaHora inicio, FechaHora fin) {
-		if(this.size==0)
-			return 0;
-		NodoTemporal aux = lista;
-		int cont = 0;
-		int a;
-		cont = 0;
-		while(aux!=null) {
-			if(aux.getFecha().compareTo(inicio)>=0 && aux.getFecha().compareTo(fin)<=0) {
-				NodoPosicion nodo = aux.getListaCoordenadas();
-				while(nodo!=null) {
-					cont = cont + 1;
-					nodo = nodo.getSiguiente();
-				}				
-				aux = aux.getSiguiente();
-			}else {
-				aux=aux.getSiguiente();
-			}
-		}
-		return cont;
-	}
+
 	
 	
 	
