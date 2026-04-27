@@ -3,7 +3,7 @@ package com.practica.lista;
 public class NodoPersonas {
 	private String documento;
 	private NodoPersonas siguiente;
-	
+
 	public NodoPersonas() {
 		super();
 		// TODO Auto-generated constructor stub
