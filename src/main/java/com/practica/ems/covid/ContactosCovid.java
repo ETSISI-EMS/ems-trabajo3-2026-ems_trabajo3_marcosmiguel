@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.practica.excecption.*;
@@ -33,9 +32,7 @@ public class ContactosCovid {
 		if (reset) resetDatos();
 
 		for (String linea : dividirEntrada(data)) {
-			if (!linea.trim().isEmpty()) {
-				procesarLinea(dividirLineaData(linea.trim()));
-			}
+			procesarLineaContenida(linea);
 		}
 	}
 
@@ -45,15 +42,21 @@ public class ContactosCovid {
 		try (BufferedReader br = new BufferedReader(new FileReader(fichero))) {
 			String linea;
 			while ((linea = br.readLine()) != null) {
-				if (!linea.trim().isEmpty()) {
-					for (String subLinea : dividirEntrada(linea.trim())) {
-						procesarLinea(dividirLineaData(subLinea));
-					}
-				}
+				procesarLineaContenida(linea);
 			}
 		} catch (IOException | EmsInvalidTypeException | EmsInvalidNumberOfDataException |
 				 EmsDuplicatePersonException | EmsDuplicateLocationException e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void procesarLineaContenida(String linea) throws EmsInvalidTypeException,
+			EmsInvalidNumberOfDataException, EmsDuplicatePersonException, EmsDuplicateLocationException {
+		String lineaTrim = linea.trim();
+		if (lineaTrim.isEmpty()) return;
+
+		for (String subLinea : dividirEntrada(lineaTrim)) {
+			procesarLinea(dividirLineaData(subLinea));
 		}
 	}
 
@@ -65,17 +68,19 @@ public class ContactosCovid {
 		}
 
 		if (datos[0].equals("PERSONA")) {
-			if (datos.length != Constantes.MAX_DATOS_PERSONA) {
-				throw new EmsInvalidNumberOfDataException("El número de datos para PERSONA es incorrecto");
-			}
+			validarNumeroDatos(datos, Constantes.MAX_DATOS_PERSONA);
 			this.poblacion.addPersona(this.crearPersona(datos));
-		} else if (datos[0].equals("LOCALIZACION")) {
-			if (datos.length != Constantes.MAX_DATOS_LOCALIZACION) {
-				throw new EmsInvalidNumberOfDataException("El número de datos para LOCALIZACION es incorrecto");
-			}
+		} else {
+			validarNumeroDatos(datos, Constantes.MAX_DATOS_LOCALIZACION);
 			PosicionPersona pp = this.crearPosicionPersona(datos);
 			this.localizacion.addLocalizacion(pp);
 			this.listaContactos.insertarNodoTemporal(pp);
+		}
+	}
+
+	private void validarNumeroDatos(String[] datos, int maximo) throws EmsInvalidNumberOfDataException {
+		if (datos.length != maximo) {
+			throw new EmsInvalidNumberOfDataException("El número de datos es incorrecto");
 		}
 	}
 
@@ -111,28 +116,14 @@ public class ContactosCovid {
 		throw new EmsPersonNotFoundException();
 	}
 
-	// Añade esto a tu clase ContactosCovid
-	public Poblacion getPoblacion() {
-		return poblacion;
-	}
-
-	public Localizacion getLocalizacion() {
-		return localizacion;
-	}
-
-	public ListaContactos getListaContactos() {
-		return listaContactos;
-	}
+	public Poblacion getPoblacion() { return poblacion; }
+	public Localizacion getLocalizacion() { return localizacion; }
+	public ListaContactos getListaContactos() { return listaContactos; }
 
 	// --- Métodos auxiliares y de parseo ---
 
-	private String[] dividirEntrada(String input) {
-		return input.split("\\n");
-	}
-
-	private String[] dividirLineaData(String data) {
-		return data.split("\\;");
-	}
+	private String[] dividirEntrada(String input) { return input.split("\\n"); }
+	private String[] dividirLineaData(String data) { return data.split("\\;"); }
 
 	private Persona crearPersona(String[] data) {
 		Persona persona = new Persona();
