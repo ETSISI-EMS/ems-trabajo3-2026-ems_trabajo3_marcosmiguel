@@ -25,11 +25,16 @@ public class Localizacion {
 		this.lista = lista;
 	}
 
-	public void addLocalizacion (PosicionPersona p) throws EmsDuplicateLocationException {
+	public void addLocalizacion(PosicionPersona p) throws EmsDuplicateLocationException {
 		try {
-			findLocalizacion(p.getDocumento(), p.getFechaPosicion().getFecha().toString(),p.getFechaPosicion().getHora().toString() );
+			// Extraemos los datos a variables temporales para acortar la línea
+			String doc = p.getDocumento();
+			String fecha = p.getFechaPosicion().getFecha().toString();
+			String hora = p.getFechaPosicion().getHora().toString();
+
+			findLocalizacion(doc, fecha, hora);
 			throw new EmsDuplicateLocationException();
-		}catch(EmsLocalizationNotFoundException e) {
+		} catch (EmsLocalizationNotFoundException e) {
 			lista.add(p);
 		}
 	}
