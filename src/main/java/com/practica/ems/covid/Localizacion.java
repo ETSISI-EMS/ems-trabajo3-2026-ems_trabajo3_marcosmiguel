@@ -41,6 +41,8 @@ public class Localizacion {
 			cont++;
 			PosicionPersona pp = it.next();
 			FechaHora fechaHora = this.parsearFecha(fecha, hora);
+
+			// Dividimos la condición larga en dos líneas más manejables
 			if(pp.getDocumento().equals(documento) &&
 					pp.getFechaPosicion().equals(fechaHora)) {
 				return cont;
